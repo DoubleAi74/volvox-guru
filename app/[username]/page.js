@@ -151,10 +151,11 @@ export default function UserDashboard({ params }) {
   if (!profileUser) {
     return (
       <>
+        <div className="p-6 min-h-[80px]"></div>
         <DashHeader
           title={`${params.username}`}
           defaultHex="#00502F"
-          alpha={1}
+          alpha={0.85}
           specPage={params.username}
           uid={profileUser?.uid}
           editModeOn={editOn}
@@ -169,10 +170,11 @@ export default function UserDashboard({ params }) {
 
   return (
     <div className="p-6">
+      <div className="p-6 min-h-[80px]"></div>
       <DashHeader
         title={`${params.username}`}
         defaultHex="#00502F"
-        alpha={1}
+        alpha={0.85}
         specPage={params.username}
         uid={profileUser?.uid}
         editModeOn={editOn}
@@ -266,7 +268,6 @@ export default function UserDashboard({ params }) {
             </div>
           )}
         </div>
-
         <div className="flex">
           <div className=" md:w-4/5">
             <DashboardInfoEditor
@@ -292,7 +293,6 @@ export default function UserDashboard({ params }) {
             )}
           </div>
         </div>
-
         {pages.length === 0 ? (
           <div className="text-center py-16">
             <h3 className="text-xl font-semibold text-neumorphic">
@@ -319,6 +319,8 @@ export default function UserDashboard({ params }) {
             ))}
           </div>
         )}
+        {/* Justs adds scrolable height to the screen */}
+        <div className="p-6 min-h-[150vh]"></div>
         {isOwner && (
           <>
             <CreatePageModal

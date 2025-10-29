@@ -61,7 +61,7 @@ export default function DashHeader({
   return (
     <div
       role="banner"
-      className="!sticky inset-x-0 top-1 z-50 backdrop-blur-md rounded-md "
+      className="  inset-x-0 top-2 left-2 right-2 z-50 backdrop-blur-md rounded-md "
       style={{
         position: "fixed",
         backgroundColor: hex
@@ -78,14 +78,7 @@ export default function DashHeader({
         />
       )}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8  ">
-        <div
-          className="flex h-[115px] items-center justify-between gap-4 border-b"
-          style={{
-            borderColor: hex
-              ? hexToRgba(hex, alpha)
-              : hexToRgba("#000000", 0.2),
-          }}
-        >
+        <div className="flex h-[100px] items-center justify-between gap-4 ">
           <div className="flex items-center gap-6 min-w-0">
             {specPage === "the-lotus-seed" && (
               <Image
@@ -95,12 +88,12 @@ export default function DashHeader({
                 height={75}
               />
             )}
-            <h1 className="truncate text-xl sm:text-xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow">
+            <h1 className="truncate text-xl sm:text-xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow ">
               {title}
             </h1>
           </div>
 
-          {specPage === "the-lotus-seed" && (
+          {true && (
             <Image
               src="/med-logo.png" // <- file in public/
               alt="Meditation soc logo"
