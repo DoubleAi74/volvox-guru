@@ -6,7 +6,7 @@ import Header from "@/components/Header"; // 1. Import the Header
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "The Lotus Seed",
+  title: "Volvox guru",
   description: "Built with Volvox",
 };
 
