@@ -1,0 +1,23 @@
+{
+  "components/MeditationTimerModal.js -> ./page/RichTextEditor": {
+    "id": "components/MeditationTimerModal.js -> ./page/RichTextEditor",
+    "files": [
+      "static/css/css-node_modules_react-quill_dist_quill_snow_css.css",
+      "static/chunks/_app-pages-browser_components_page_RichTextEditor_js.js"
+    ]
+  },
+  "components/page/CreatePostModal.js -> ./RichTextEditor": {
+    "id": "components/page/CreatePostModal.js -> ./RichTextEditor",
+    "files": [
+      "static/css/css-node_modules_react-quill_dist_quill_snow_css.css",
+      "static/chunks/_app-pages-browser_components_page_RichTextEditor_js.js"
+    ]
+  },
+  "components/page/EditPostModal.js -> ./RichTextEditor": {
+    "id": "components/page/EditPostModal.js -> ./RichTextEditor",
+    "files": [
+      "static/css/css-node_modules_react-quill_dist_quill_snow_css.css",
+      "static/chunks/_app-pages-browser_components_page_RichTextEditor_js.js"
+    ]
+  }
+}
