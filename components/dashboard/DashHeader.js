@@ -1,18 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import Image from "next/image";
 
 import { changeHexGlobal, fetchHex } from "@/lib/data";
 
-export default function DashHeader({
-  title = "Dashboard",
-  defaultHex = "#00502F",
-  alpha = 0.65,
-  specPage,
-  uid,
-  editModeOn = false,
-  openColor,
-}) {
+function DashHeaderInner(
+  {
+    title = "Dashboard",
+    defaultHex = "#00502F",
+    alpha = 0.65,
+    specPage,
+    uid,
+    editModeOn = false,
+    openColor,
+    style,
+    className,
+  },
+  ref
+) {
   const [hex, setHex] = useState(null);
 
   const findHex = async (uid, saved) => {
@@ -57,16 +62,21 @@ export default function DashHeader({
     changeHexGlobal(uid, newHex);
   };
 
-  console.log(hex);
+  // Combine default classes with any custom className from props
+  const combinedClassName = `inset-x-0 top-2 left-2 right-2 z-50 backdrop-blur-md rounded-md ${
+    className || ""
+  }`;
+
   return (
     <div
+      ref={ref}
       role="banner"
-      className="  inset-x-0 top-2 left-2 right-2 z-50 backdrop-blur-md rounded-md "
+      className={combinedClassName}
       style={{
-        position: "fixed",
         backgroundColor: hex
           ? hexToRgba(hex, alpha)
           : hexToRgba("#000000", 0.2),
+        ...style, // This allows the parent to set the position
       }}
     >
       {(editModeOn || openColor) && (
@@ -125,3 +135,5 @@ export default function DashHeader({
     </div>
   );
 }
+
+export default forwardRef(DashHeaderInner);

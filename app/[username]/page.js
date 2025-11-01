@@ -2,7 +2,8 @@
 
 import DashHeader from "@/components/dashboard/DashHeader";
 import DashboardInfoEditor from "@/components/dashboard/DashboardInfoEditor";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+
 import { useAuth } from "@/context/AuthContext";
 import { Plus, LogOut, LogIn, User as UserIcon } from "lucide-react";
 import PageCard from "@/components/dashboard/PageCard";
@@ -33,6 +34,9 @@ export default function UserDashboard({ params }) {
 
   const [editOn, setEditOn] = useState(false);
 
+  const header1WrapperRef = useRef(null);
+  const header2WrapperRef = useRef(null);
+
   const isOwner =
     currentUser && profileUser && currentUser.uid === profileUser.uid;
 
@@ -54,6 +58,66 @@ export default function UserDashboard({ params }) {
       console.error("Failed to log out:", error);
     }
   };
+
+  // useEffect(() => {
+  //   const headerEl = headerRef.current;
+  //   const sentinelEl = sentinelRef.current;
+  //   if (!headerEl || !sentinelEl) return;
+
+  //   // Performance hint
+  //   headerEl.style.willChange = "transform";
+
+  //   let ticking = false;
+
+  //   function updateHeaderPosition() {
+  //     // header height
+  //     const headerHeight = headerEl.offsetHeight;
+
+  //     // sentinel offset from document top
+  //     const sentinelTop =
+  //       sentinelEl.getBoundingClientRect().top + window.scrollY;
+  //     const scrollY = window.scrollY;
+
+  //     const startScroll = sentinelTop - headerHeight;
+  //     const endScroll = sentinelTop;
+
+  //     let transformValue;
+  //     if (scrollY <= startScroll) {
+  //       transformValue = 0;
+  //     } else if (scrollY >= endScroll) {
+  //       transformValue = -headerHeight;
+  //     } else {
+  //       const progress = (scrollY - startScroll) / (endScroll - startScroll);
+  //       transformValue = -progress * headerHeight;
+  //     }
+
+  //     headerEl.style.transform = `translateY(${transformValue}px)`;
+  //     ticking = false;
+  //   }
+
+  //   function onScroll() {
+  //     if (!ticking) {
+  //       window.requestAnimationFrame(updateHeaderPosition);
+  //       ticking = true;
+  //     }
+  //   }
+
+  //   // initial position
+  //   updateHeaderPosition();
+
+  //   document.addEventListener("scroll", onScroll, { passive: true });
+  //   window.addEventListener("resize", updateHeaderPosition, { passive: true });
+
+  //   return () => {
+  //     document.removeEventListener("scroll", onScroll);
+  //     window.removeEventListener("resize", updateHeaderPosition);
+  //     // reset styles
+  //     headerEl.style.transform = "";
+  //     headerEl.style.willChange = "";
+  //   };
+  // }, [
+  //   /* run when main layout elements or profileUser change: */ profileUser?.uid,
+  // ]);
 
   // This single useEffect now handles the entire loading process.
   useEffect(() => {
@@ -132,6 +196,63 @@ export default function UserDashboard({ params }) {
     }
   };
 
+  const updateHeaderPosition = useCallback(() => {
+    const header1Wrapper = header1WrapperRef.current;
+    const header2Wrapper = header2WrapperRef.current;
+    // Guard clause: if refs aren't attached yet, do nothing.
+    if (!header1Wrapper || !header2Wrapper) return;
+
+    const header1Height = header1Wrapper.offsetHeight;
+    const header2OffsetTop = header2Wrapper.offsetTop;
+    const scrollY = window.scrollY;
+
+    const startScroll = header2OffsetTop - header1Height;
+    const endScroll = header2OffsetTop;
+
+    let transformValue;
+
+    if (scrollY <= startScroll) {
+      transformValue = 0;
+    } else if (scrollY >= endScroll) {
+      transformValue = -header1Height;
+    } else {
+      const progress = (scrollY - startScroll) / (endScroll - startScroll);
+      transformValue = -progress * header1Height;
+    }
+
+    header1Wrapper.style.transform = `translateY(${transformValue}px)`;
+  }, []);
+
+  useEffect(() => {
+    // We can't run this until the profileUser is loaded and the refs are attached.
+    if (!profileUser) return;
+
+    let ticking = false;
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateHeaderPosition();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Run once on load to set the initial position correctly.
+    updateHeaderPosition();
+
+    document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateHeaderPosition, { passive: true });
+
+    return () => {
+      document.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateHeaderPosition);
+    };
+    // CHANGE 3: The effect now depends on the memoized function.
+    // It will only re-run if updateHeaderPosition itself changes (which it won't).
+  }, [profileUser, updateHeaderPosition]);
+
   // This render logic now works correctly.
   if (loading) {
     return (
@@ -152,15 +273,20 @@ export default function UserDashboard({ params }) {
     return (
       <>
         <div className="p-6 min-h-[80px]"></div>
-        <DashHeader
-          title={`${params.username}`}
-          defaultHex="#00502F"
-          alpha={0.85}
-          specPage={params.username}
-          uid={profileUser?.uid}
-          editModeOn={editOn}
-          openColor={openCol}
-        />
+        <div
+          ref={header1WrapperRef}
+          className="fixed top-0 left-0 right-0 z-20 pt-2 px-2"
+        >
+          <DashHeader
+            title={`${params.username}`}
+            defaultHex="#00502F"
+            alpha={0.85}
+            uid={profileUser?.uid}
+            editModeOn={editOn}
+            // No style prop needed here, the wrapper handles positioning
+          />
+        </div>
+
         <div className="p-16 text-center text-xl text-neumorphic">
           Looking for {params.username + "'s"} page.
         </div>
@@ -169,174 +295,107 @@ export default function UserDashboard({ params }) {
   }
 
   return (
-    <div className="p-6">
-      <div className="p-6 min-h-[80px]"></div>
-      <DashHeader
-        title={`${params.username}`}
-        defaultHex="#00502F"
-        alpha={0.85}
-        specPage={params.username}
-        uid={profileUser?.uid}
-        editModeOn={editOn}
-        openColor={openCol}
-      />
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold  mb-2">
-              {/* {params.username} */}
-            </h1>
+    <>
+      <div
+        ref={header1WrapperRef}
+        className="fixed top-0 left-0 right-0 z-20 pt-2 px-2"
+      >
+        <DashHeader
+          title={`${params.username}`}
+          defaultHex="#00502F"
+          alpha={0.85}
+          uid={profileUser?.uid}
+          editModeOn={editOn}
+          // No style prop needed here, the wrapper handles positioning
+        />
+      </div>
+      {/* First information content */}
+      <div className="p-6">
+        <div className="min-h-[80px]"></div>
+        {/* FIRST HEADER: Fixed at the top, but will fade out */}
+        {/* Header 1 Wrapper - FIXED */}
+
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-bold  mb-2">
+                {/* {params.username} */}
+              </h1>
+            </div>
           </div>
+          <div className="flex">
+            <div className=" md:w-4/5">
+              <DashboardInfoEditor
+                uid={profileUser?.uid}
+                canEdit={isOwner}
+                editOn={editOn}
+              />
+            </div>
 
-          {isOwner ? (
-            <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
-              {/* New Page Button */}
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-              >
-                <Plus className="w-5 h-5" />
-                New Page
-              </button>
-
-              {/* Toggle edit mode */}
-
-              {editOn ? (
+            <div className=" hidden md:block w-1/5 justify-center ">
+              {params.username === "the-lotus-seed" && (
                 <button
-                  onClick={() => setEditOn(!editOn)}
-                  className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+                  onClick={() =>
+                    router.push("./the-lotus-seed/meditations?meditate=1")
+                  }
+                  aria-label="Meditate now"
+                  className="  z-50 flex items-center gap-3 mb-6 ml-10  px-7 py-5 h-[65px] rounded-xl shadow-md border-2 border-[#80a4a0]/30 hover:border-[#58817c] bg-[#aad8d3] text-[#545656] font-medium hover:shadow-neumorphic-hover active:shadow-neumorphic-pressed"
                 >
-                  <div className="text-white">Edit: on</div>
-                </button>
-              ) : (
-                <button
-                  onClick={() => setEditOn(!editOn)}
-                  className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-                >
-                  <div>Edit: off</div>
+                  {/* optional icon */}
+                  {/* <Plus className="w-4 h-4" /> */}
+                  Meditate now
                 </button>
               )}
-
-              {/* User Info + Logout */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]">
-                  <UserIcon className="w-5 h-5" />
-                  <span className="text-sm">{currentUser.email}</span>
-                </div>
-
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
-                  title="Log Out"
-                >
-                  <LogOut className="w-5 h-5" />
-                </button>
-              </div>
+            </div>
+          </div>
+          {pages.length === 0 ? (
+            <div className="text-center py-16">
+              <h3 className="text-xl font-semibold text-neumorphic">
+                No public pages.
+              </h3>
+              {isOwner && (
+                <p className="text-neumorphic-text mt-2">
+                  Create your first one to get started!
+                </p>
+              )}
             </div>
           ) : (
-            <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
-              {/* New Page Button */}
-
-              {/* Toggle edit mode */}
-
-              {openCol ? (
-                <button
-                  onClick={() => setOpenCol(!openCol)}
-                  className="flex  w-[85px]  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-                >
-                  <div className="text-white">Edit: on</div>
-                </button>
-              ) : (
-                <button
-                  onClick={() => setOpenCol(!openCol)}
-                  className=" w-[85px] flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-                >
-                  <div>Edit: off</div>
-                </button>
-              )}
-
-              {/* User Info + Logout */}
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push("/login")}
-                  className="flex text-sm font-medium items-center gap-2 hover:shadow-neumorphic-soft px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]"
-                >
-                  <UserIcon className="w-5 h-5" />
-                  <span className="text-sm">Create your own volvox page</span>
-                </button>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {pages.map((page) => (
+                <PageCard
+                  key={page.id}
+                  page={page}
+                  isOwner={isOwner}
+                  editModeOn={editOn}
+                  username={params.username}
+                  onDelete={() => handleDeletePage(page.id)}
+                  onEdit={() => setEditingPage(page)}
+                />
+              ))}
             </div>
           )}
         </div>
-        <div className="flex">
-          <div className=" md:w-4/5">
-            <DashboardInfoEditor
-              uid={profileUser?.uid}
-              canEdit={isOwner}
-              editOn={editOn}
-            />
-          </div>
-
-          <div className=" hidden md:block w-1/5 justify-center ">
-            {params.username === "the-lotus-seed" && (
-              <button
-                onClick={() =>
-                  router.push("./the-lotus-seed/meditations?meditate=1")
-                }
-                aria-label="Meditate now"
-                className="  z-50 flex items-center gap-3 mb-6 ml-10  px-7 py-5 h-[65px] rounded-xl shadow-md border-2 border-[#80a4a0]/30 hover:border-[#58817c] bg-[#aad8d3] text-[#545656] font-medium hover:shadow-neumorphic-hover active:shadow-neumorphic-pressed"
-              >
-                {/* optional icon */}
-                {/* <Plus className="w-4 h-4" /> */}
-                Meditate now
-              </button>
-            )}
-          </div>
-        </div>
-        {pages.length === 0 ? (
-          <div className="text-center py-16">
-            <h3 className="text-xl font-semibold text-neumorphic">
-              No public pages.
-            </h3>
-            {isOwner && (
-              <p className="text-neumorphic-text mt-2">
-                Create your first one to get started!
-              </p>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {pages.map((page) => (
-              <PageCard
-                key={page.id}
-                page={page}
-                isOwner={isOwner}
-                editModeOn={editOn}
-                username={params.username}
-                onDelete={() => handleDeletePage(page.id)}
-                onEdit={() => setEditingPage(page)}
-              />
-            ))}
-          </div>
-        )}
-        {/* Justs adds scrolable height to the screen */}
-        <div className="p-6 min-h-[150vh]"></div>
-        {isOwner && (
-          <>
-            <CreatePageModal
-              isOpen={showCreateModal}
-              onClose={() => setShowCreateModal(false)}
-              onSubmit={handleCreatePage}
-            />
-            <EditPageModal
-              isOpen={!!editingPage}
-              page={editingPage}
-              onClose={() => setEditingPage(null)}
-              onSubmit={handleEditPage}
-            />
-          </>
-        )}
       </div>
+
+      {/* Header 2 Wrapper - STICKY */}
+      <div
+        ref={header2WrapperRef}
+        className="sticky top-0 left-0 right-0 z-10 pt-2 px-2 mt-12"
+      >
+        <DashHeader
+          title={`${params.username} (scrolled)`}
+          defaultHex="#166534" // Different color to see the change
+          alpha={0.85}
+          uid={profileUser?.uid}
+          editModeOn={false}
+        />
+      </div>
+
+      {/* Second section below the second header */}
+      <div className="p-6">sdfsdf</div>
+
+      {/* Justs adds scrolable height to the screen */}
+      <div className="p-6 min-h-[150vh]"></div>
 
       {params.username === "the-lotus-seed" && (
         <button
@@ -349,6 +408,102 @@ export default function UserDashboard({ params }) {
           Meditate now
         </button>
       )}
-    </div>
+
+      {isOwner ? (
+        <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+          {/* New Page Button */}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+          >
+            <Plus className="w-5 h-5" />
+            New Page
+          </button>
+
+          {/* Toggle edit mode */}
+
+          {editOn ? (
+            <button
+              onClick={() => setEditOn(!editOn)}
+              className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+            >
+              <div className="text-white">Edit: on</div>
+            </button>
+          ) : (
+            <button
+              onClick={() => setEditOn(!editOn)}
+              className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+            >
+              <div>Edit: off</div>
+            </button>
+          )}
+
+          {/* User Info + Logout */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]">
+              <UserIcon className="w-5 h-5" />
+              <span className="text-sm">{currentUser.email}</span>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
+              title="Log Out"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+          {/* New Page Button */}
+
+          {/* Toggle edit mode */}
+
+          {openCol ? (
+            <button
+              onClick={() => setOpenCol(!openCol)}
+              className="flex  w-[85px]  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+            >
+              <div className="text-white">Edit: on</div>
+            </button>
+          ) : (
+            <button
+              onClick={() => setOpenCol(!openCol)}
+              className=" w-[85px] flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+            >
+              <div>Edit: off</div>
+            </button>
+          )}
+
+          {/* User Info + Logout */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push("/login")}
+              className="flex text-sm font-medium items-center gap-2 hover:shadow-neumorphic-soft px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]"
+            >
+              <UserIcon className="w-5 h-5" />
+              <span className="text-sm">Create your own volvox page</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isOwner && (
+        <>
+          <CreatePageModal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            onSubmit={handleCreatePage}
+          />
+          <EditPageModal
+            isOpen={!!editingPage}
+            page={editingPage}
+            onClose={() => setEditingPage(null)}
+            onSubmit={handleEditPage}
+          />
+        </>
+      )}
+    </>
   );
 }
