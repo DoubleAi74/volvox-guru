@@ -13,7 +13,7 @@ function DashHeaderInner(
     uid,
     editModeOn = false,
     openColor,
-    style,
+
     className,
   },
   ref
@@ -62,21 +62,20 @@ function DashHeaderInner(
     changeHexGlobal(uid, newHex);
   };
 
-  // Combine default classes with any custom className from props
-  const combinedClassName = `inset-x-0 top-2 left-2 right-2 z-50 backdrop-blur-md rounded-md ${
-    className || ""
-  }`;
+  const combinedClassName = `backdrop-blur-md rounded-md ${className || ""}`;
 
   return (
     <div
       ref={ref}
       role="banner"
       className={combinedClassName}
+      // Merge default styles with custom styles from props.
+      // Note that `position` is NOT defined here. It's controlled by the parent.
       style={{
         backgroundColor: hex
           ? hexToRgba(hex, alpha)
           : hexToRgba("#000000", 0.2),
-        ...style, // This allows the parent to set the position
+        // This allows the parent component to pass in styles like `position`, etc.
       }}
     >
       {(editModeOn || openColor) && (

@@ -348,32 +348,6 @@ export default function UserDashboard({ params }) {
               )}
             </div>
           </div>
-          {pages.length === 0 ? (
-            <div className="text-center py-16">
-              <h3 className="text-xl font-semibold text-neumorphic">
-                No public pages.
-              </h3>
-              {isOwner && (
-                <p className="text-neumorphic-text mt-2">
-                  Create your first one to get started!
-                </p>
-              )}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {pages.map((page) => (
-                <PageCard
-                  key={page.id}
-                  page={page}
-                  isOwner={isOwner}
-                  editModeOn={editOn}
-                  username={params.username}
-                  onDelete={() => handleDeletePage(page.id)}
-                  onEdit={() => setEditingPage(page)}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
@@ -392,7 +366,36 @@ export default function UserDashboard({ params }) {
       </div>
 
       {/* Second section below the second header */}
-      <div className="p-6">sdfsdf</div>
+      <div className="p-6">
+        {/* Pages displayed in a grid */}
+
+        {pages.length === 0 ? (
+          <div className="text-center py-16">
+            <h3 className="text-xl font-semibold text-neumorphic">
+              No public pages.
+            </h3>
+            {isOwner && (
+              <p className="text-neumorphic-text mt-2">
+                Create your first one to get started!
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {pages.map((page) => (
+              <PageCard
+                key={page.id}
+                page={page}
+                isOwner={isOwner}
+                editModeOn={editOn}
+                username={params.username}
+                onDelete={() => handleDeletePage(page.id)}
+                onEdit={() => setEditingPage(page)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Justs adds scrolable height to the screen */}
       <div className="p-6 min-h-[150vh]"></div>
