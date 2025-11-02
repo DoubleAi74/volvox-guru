@@ -34,12 +34,12 @@ export default function PostSlugView({ params }) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="w-36 h-36 rounded-full bg-[#f7f3ed] flex items-center justify-center shadow-neumorphic-inset animate-pulse">
-          <Image
+          {/* <Image
             src="/logo-lotus.png" // <- file in public/
             alt="Logo"
             width={100}
             height={100}
-          />
+          /> */}
         </div>
       </div>
     );

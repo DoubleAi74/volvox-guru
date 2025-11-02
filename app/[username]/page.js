@@ -258,12 +258,12 @@ export default function UserDashboard({ params }) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="w-36 h-36 rounded-full bg-[#f7f3ed] flex items-center justify-center shadow-neumorphic-inset animate-pulse">
-          <Image
+          {/* <Image
             src="/logo-lotus.png" // <- file in public/
             alt="Logo"
             width={100}
             height={100}
-          />
+          /> */}
         </div>
       </div>
     );
@@ -357,11 +357,12 @@ export default function UserDashboard({ params }) {
         className="sticky top-0 left-0 right-0 z-10 pt-2 px-2 mt-12"
       >
         <DashHeader
-          title={`${params.username} (scrolled)`}
+          title={"Services offered"}
           defaultHex="#166534" // Different color to see the change
-          alpha={0.85}
+          alpha={0.75}
           uid={profileUser?.uid}
           editModeOn={false}
+          heightPx={70}
         />
       </div>
 
@@ -458,38 +459,39 @@ export default function UserDashboard({ params }) {
           </div>
         </div>
       ) : (
-        <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
-          {/* New Page Button */}
+        // <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+        //   {/* New Page Button */}
 
-          {/* Toggle edit mode */}
+        //   {/* Toggle edit mode */}
 
-          {openCol ? (
-            <button
-              onClick={() => setOpenCol(!openCol)}
-              className="flex  w-[85px]  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-            >
-              <div className="text-white">Edit: on</div>
-            </button>
-          ) : (
-            <button
-              onClick={() => setOpenCol(!openCol)}
-              className=" w-[85px] flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-            >
-              <div>Edit: off</div>
-            </button>
-          )}
+        //   {openCol ? (
+        //     <button
+        //       onClick={() => setOpenCol(!openCol)}
+        //       className="flex  w-[85px]  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+        //     >
+        //       <div className="text-white">Edit: on</div>
+        //     </button>
+        //   ) : (
+        //     <button
+        //       onClick={() => setOpenCol(!openCol)}
+        //       className=" w-[85px] flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+        //     >
+        //       <div>Edit: off</div>
+        //     </button>
+        //   )}
 
-          {/* User Info + Logout */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => router.push("/login")}
-              className="flex text-sm font-medium items-center gap-2 hover:shadow-neumorphic-soft px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]"
-            >
-              <UserIcon className="w-5 h-5" />
-              <span className="text-sm">Create your own volvox page</span>
-            </button>
-          </div>
-        </div>
+        //   {/* User Info + Logout */}
+        //   <div className="flex items-center gap-4">
+        //     <button
+        //       onClick={() => router.push("/login")}
+        //       className="flex text-sm font-medium items-center gap-2 hover:shadow-neumorphic-soft px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]"
+        //     >
+        //       <UserIcon className="w-5 h-5" />
+        //       <span className="text-sm">Create your own volvox page</span>
+        //     </button>
+        //   </div>
+        // </div>
+        <></>
       )}
 
       {isOwner && (

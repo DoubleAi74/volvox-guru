@@ -13,12 +13,20 @@ function DashHeaderInner(
     uid,
     editModeOn = false,
     openColor,
-
+    heightPx = 100,
     className,
   },
   ref
 ) {
   const [hex, setHex] = useState(null);
+
+  const fixTitle = (title) => {
+    return title
+      .replace(/-/g, " ") // replace dashes with spaces
+      .replace(/^([a-z])/, (c) => c.toUpperCase()); // capitalize first letter
+  };
+
+  const titleFixed = fixTitle(title);
 
   const findHex = async (uid, saved) => {
     // Fetch the global hex from the server or database
@@ -87,22 +95,24 @@ function DashHeaderInner(
         />
       )}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8  ">
-        <div className="flex h-[100px] items-center justify-between gap-4 ">
+        <div
+          className={`flex h-[${heightPx}px] items-center justify-between gap-4`}
+        >
           <div className="flex items-center gap-6 min-w-0">
-            {specPage === "the-lotus-seed" && (
+            {/* {specPage === "the-lotus-seed" && (
               <Image
                 src="/logo-lotus.png" // <- file in public/
                 alt="Logo"
                 width={75}
                 height={75}
               />
-            )}
+            )} */}
             <h1 className="truncate text-xl sm:text-xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow ">
-              {title}
+              {titleFixed}
             </h1>
           </div>
 
-          {true && (
+          {/* {true && (
             <Image
               src="/med-logo.png" // <- file in public/
               alt="Meditation soc logo"
@@ -110,7 +120,7 @@ function DashHeaderInner(
               width={70}
               height={70}
             />
-          )}
+          )} */}
           <div className="flex  items-center gap-3">
             {specPage === "the-lotus-seed" && (
               <>
@@ -118,14 +128,14 @@ function DashHeaderInner(
                   The University of Leeds <br />
                   Meditation Society
                 </label>
-                <div className="hidden sm:block">
+                {/* <div className="hidden sm:block">
                   <Image
                     src="/Leeds-logo.png" // <- file in public/
                     alt="Leeds Uni Clocktower"
                     width={60}
                     height={60}
                   />
-                </div>
+                </div> */}
               </>
             )}
           </div>
