@@ -311,18 +311,11 @@ export default function UserDashboard({ params }) {
       </div>
       {/* First information content */}
       <div className="p-6">
-        <div className="min-h-[80px]"></div>
+        <div className="min-h-[120px]"></div>
         {/* FIRST HEADER: Fixed at the top, but will fade out */}
         {/* Header 1 Wrapper - FIXED */}
 
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold  mb-2">
-                {/* {params.username} */}
-              </h1>
-            </div>
-          </div>
           <div className="flex">
             <div className=" w-full">
               <DashboardInfoEditor
