@@ -96,7 +96,8 @@ function DashHeaderInner(
       )}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8  ">
         <div
-          className={`flex h-[${heightPx}px] items-center justify-between gap-4`}
+          className="flex items-center justify-between gap-4"
+          style={{ height: `${heightPx}px` }}
         >
           <div className="flex items-center gap-6 min-w-0">
             {/* {specPage === "the-lotus-seed" && (
