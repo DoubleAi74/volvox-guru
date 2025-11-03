@@ -275,7 +275,7 @@ export default function UserDashboard({ params }) {
         <div className="p-6 min-h-[80px]"></div>
         <div
           ref={header1WrapperRef}
-          className="fixed top-0 left-0 right-0 z-20 pt-2 px-2"
+          className="fixed top-0 left-0 right-0 z-20 pt-2 px-0"
         >
           <DashHeader
             title={`${params.username}`}
@@ -298,7 +298,7 @@ export default function UserDashboard({ params }) {
     <>
       <div
         ref={header1WrapperRef}
-        className="fixed top-0 left-0 right-0 z-20 pt-2 px-2"
+        className="fixed top-0 left-0 right-0 z-20 pt-2 px-0"
       >
         <DashHeader
           title={`${params.username}`}
@@ -324,28 +324,12 @@ export default function UserDashboard({ params }) {
             </div>
           </div>
           <div className="flex">
-            <div className=" md:w-4/5">
+            <div className=" w-full">
               <DashboardInfoEditor
                 uid={profileUser?.uid}
                 canEdit={isOwner}
                 editOn={editOn}
               />
-            </div>
-
-            <div className=" hidden md:block w-1/5 justify-center ">
-              {params.username === "the-lotus-seed" && (
-                <button
-                  onClick={() =>
-                    router.push("./the-lotus-seed/meditations?meditate=1")
-                  }
-                  aria-label="Meditate now"
-                  className="  z-50 flex items-center gap-3 mb-6 ml-10  px-7 py-5 h-[65px] rounded-xl shadow-md border-2 border-[#80a4a0]/30 hover:border-[#58817c] bg-[#aad8d3] text-[#545656] font-medium hover:shadow-neumorphic-hover active:shadow-neumorphic-pressed"
-                >
-                  {/* optional icon */}
-                  {/* <Plus className="w-4 h-4" /> */}
-                  Meditate now
-                </button>
-              )}
             </div>
           </div>
         </div>
@@ -354,7 +338,7 @@ export default function UserDashboard({ params }) {
       {/* Header 2 Wrapper - STICKY */}
       <div
         ref={header2WrapperRef}
-        className="sticky top-0 left-0 right-0 z-10 pt-2 px-2 mt-12"
+        className="sticky top-0 left-0 right-0 z-10 pt-2 px-0 "
       >
         <DashHeader
           title={"Services offered"}
@@ -414,51 +398,111 @@ export default function UserDashboard({ params }) {
       )}
 
       {isOwner ? (
-        <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
-          {/* New Page Button */}
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-          >
-            <Plus className="w-5 h-5" />
-            New Page
-          </button>
+        <>
+          {/* Mobile buttons view */}
+          <div className="flex md:hidden items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+            {/* New Page Button */}
+            {editOn && (
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+              >
+                <Plus className="w-5 h-5" />
+                New Page
+              </button>
+            )}
 
-          {/* Toggle edit mode */}
+            {/* Toggle edit mode */}
 
-          {editOn ? (
-            <button
-              onClick={() => setEditOn(!editOn)}
-              className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-            >
-              <div className="text-white">Edit: on</div>
-            </button>
-          ) : (
-            <button
-              onClick={() => setEditOn(!editOn)}
-              className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-            >
-              <div>Edit: off</div>
-            </button>
-          )}
+            {editOn ? (
+              <button
+                onClick={() => setEditOn(!editOn)}
+                className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+              >
+                <div className="text-white">Edit: on</div>
+              </button>
+            ) : (
+              <button
+                onClick={() => setEditOn(!editOn)}
+                className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+              >
+                <div>Edit: off</div>
+              </button>
+            )}
 
-          {/* User Info + Logout */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]">
-              <UserIcon className="w-5 h-5" />
-              <span className="text-sm">{currentUser.email}</span>
+            {/* User Info + Logout */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleLogout}
+                className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
+                title="Log Out"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
             </div>
+          </div>
+
+          {/* Desktop buttons view */}
+
+          <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+            {/* New Page Button */}
 
             <button
-              onClick={handleLogout}
-              className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
-              title="Log Out"
+              onClick={() => setShowCreateModal(true)}
+              className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
             >
-              <LogOut className="w-5 h-5" />
+              <Plus className="w-5 h-5" />
+              New Page
+            </button>
+
+            {/* Toggle edit mode */}
+
+            {editOn ? (
+              <button
+                onClick={() => setEditOn(!editOn)}
+                className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+              >
+                <div className="text-white">Edit: on</div>
+              </button>
+            ) : (
+              <button
+                onClick={() => setEditOn(!editOn)}
+                className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+              >
+                <div>Edit: off</div>
+              </button>
+            )}
+
+            {/* User Info + Logout */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]">
+                <UserIcon className="w-5 h-5" />
+                <span className="text-sm">{currentUser.email}</span>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
+                title="Log Out"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push("/login")}
+              className="flex text-sm font-medium items-center gap-2 hover:shadow-neumorphic-soft px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]"
+            >
+              <UserIcon className="w-5 h-5" />
+              <span className="text-sm">Login</span>
             </button>
           </div>
         </div>
-      ) : (
+
         // <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
         //   {/* New Page Button */}
 
@@ -491,7 +535,6 @@ export default function UserDashboard({ params }) {
         //     </button>
         //   </div>
         // </div>
-        <></>
       )}
 
       {isOwner && (

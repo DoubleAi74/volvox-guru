@@ -70,7 +70,7 @@ function DashHeaderInner(
     changeHexGlobal(uid, newHex);
   };
 
-  const combinedClassName = `backdrop-blur-md rounded-md ${className || ""}`;
+  const combinedClassName = `backdrop-blur-md  ${className || ""}`;
 
   return (
     <div
@@ -89,7 +89,7 @@ function DashHeaderInner(
       {(editModeOn || openColor) && (
         <input
           type="color"
-          className="mr-3 h-9 w-9 hidden md:block cursor-pointer absolute right-6 top-7 rounded-md border border-white/50 bg-transparent p-1 shadow"
+          className="mr-3 h-9 w-9  block cursor-pointer absolute right-6 top-7 rounded-md border border-white/50 bg-transparent p-1 shadow"
           value={hex}
           onChange={(e) => setHexGlobal(e.target.value)}
         />
@@ -108,7 +108,7 @@ function DashHeaderInner(
                 height={75}
               />
             )} */}
-            <h1 className="truncate text-xl sm:text-xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow ">
+            <h1 className="truncate text-2xl sm:text-3xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow ">
               {titleFixed}
             </h1>
           </div>
