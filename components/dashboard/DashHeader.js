@@ -2,8 +2,6 @@
 import { useEffect, useState, forwardRef } from "react";
 import Image from "next/image";
 
-import { changeHexGlobal, fetchHex } from "@/lib/data";
-
 function DashHeaderInner(
   {
     title = "Dashboard",
@@ -15,11 +13,11 @@ function DashHeaderInner(
     openColor,
     heightPx = 100,
     className,
+    hexColor,
+    onColorChange,
   },
   ref
 ) {
-  const [hex, setHex] = useState(null);
-
   const fixTitle = (title) => {
     return title
       .replace(/-/g, " ") // replace dashes with spaces
@@ -28,36 +26,6 @@ function DashHeaderInner(
 
   const titleFixed = fixTitle(title);
 
-  const findHex = async (uid, saved) => {
-    // Fetch the global hex from the server or database
-    // For demonstration, we'll just return a hardcoded value
-
-    try {
-      const fetchedHex = await fetchHex(uid);
-      setHex(fetchedHex);
-      return;
-    } catch (e) {
-      console.error("Error fetching hex:", e);
-      if (saved) {
-        setHex(saved);
-      } else {
-        setHex(defaultHex);
-      }
-
-      return;
-    }
-  };
-
-  useEffect(() => {
-    const saved = localStorage.getItem("headerHex");
-    console.log("use Effect");
-    findHex(uid, saved);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("headerHex", hex);
-  }, [hex]);
-
   const hexToRgba = (hex, alpha) => {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -65,12 +33,9 @@ function DashHeaderInner(
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  const setHexGlobal = (newHex) => {
-    setHex(newHex);
-    changeHexGlobal(uid, newHex);
-  };
-
   const combinedClassName = `backdrop-blur-md  ${className || ""}`;
+
+  const activeHex = hexColor || defaultHex;
 
   return (
     <div
@@ -80,18 +45,15 @@ function DashHeaderInner(
       // Merge default styles with custom styles from props.
       // Note that `position` is NOT defined here. It's controlled by the parent.
       style={{
-        backgroundColor: hex
-          ? hexToRgba(hex, alpha)
-          : hexToRgba("#000000", 0.2),
-        // This allows the parent component to pass in styles like `position`, etc.
+        backgroundColor: hexToRgba(activeHex, alpha),
       }}
     >
       {(editModeOn || openColor) && (
         <input
           type="color"
           className="mr-3 h-9 w-9  block cursor-pointer absolute right-6 top-7 rounded-md border border-white/50 bg-transparent p-1 shadow"
-          value={hex}
-          onChange={(e) => setHexGlobal(e.target.value)}
+          value={activeHex}
+          onChange={(e) => onColorChange(e.target.value)}
         />
       )}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8  ">

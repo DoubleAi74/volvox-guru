@@ -19,6 +19,8 @@ import {
 
 import { useRouter } from "next/navigation";
 
+import { changeHexGlobal, fetchHex } from "@/lib/data";
+
 import Image from "next/image";
 
 export default function UserDashboard({ params }) {
@@ -33,6 +35,16 @@ export default function UserDashboard({ params }) {
   const [openCol, setOpenCol] = useState(false);
 
   const [editOn, setEditOn] = useState(false);
+
+  const [headerColor, setHeaderColor] = useState("#00502F");
+
+  const handleHeaderColorChange = (newHex) => {
+    setHeaderColor(newHex); // 1. Update parent state (triggers re-render)
+    localStorage.setItem("headerHex", newHex); // 2. Update local storage
+    if (profileUser) {
+      changeHexGlobal(profileUser.uid, newHex); // 3. Update database
+    }
+  };
 
   const header1WrapperRef = useRef(null);
   const header2WrapperRef = useRef(null);
@@ -135,6 +147,16 @@ export default function UserDashboard({ params }) {
         // Fetch pages, telling the function whether to include private ones
         const userPages = await getPages(user.uid, isCurrentUserOwner);
         setPages(userPages);
+
+        try {
+          const saved = localStorage.getItem("headerHex");
+          const fetchedHex = await fetchHex(user.uid);
+          setHeaderColor(fetchedHex || saved || "#00502F");
+        } catch (e) {
+          console.error("Failed to fetch hex:", e);
+          const saved = localStorage.getItem("headerHex");
+          setHeaderColor(saved || "#00502F");
+        }
       }
 
       // Only set loading to false after all async operations are complete.
@@ -283,6 +305,7 @@ export default function UserDashboard({ params }) {
             alpha={0.85}
             uid={profileUser?.uid}
             editModeOn={editOn}
+            hexColor={headerColor}
             // No style prop needed here, the wrapper handles positioning
           />
         </div>
@@ -306,6 +329,8 @@ export default function UserDashboard({ params }) {
           alpha={0.85}
           uid={profileUser?.uid}
           editModeOn={editOn}
+          hexColor={headerColor}
+          onColorChange={handleHeaderColorChange}
           // No style prop needed here, the wrapper handles positioning
         />
       </div>
@@ -339,6 +364,7 @@ export default function UserDashboard({ params }) {
           alpha={0.75}
           uid={profileUser?.uid}
           editModeOn={false}
+          hexColor={headerColor}
           heightPx={70}
         />
       </div>
