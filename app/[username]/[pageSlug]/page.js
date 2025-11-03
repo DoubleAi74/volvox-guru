@@ -21,10 +21,6 @@ import MeditationTimerModal from "@/components/MeditationTimerModal";
 
 import PageInfoEditor from "@/components/page/PageInfoEditor";
 
-import RandomizedImage, {
-  generateRandomParams,
-} from "@/components/RandomizedImage";
-
 import Image from "next/image";
 
 export default function PageSlugView({ params }) {
@@ -165,34 +161,6 @@ export default function PageSlugView({ params }) {
         <div className="p-16 text-center text-xl text-neumorphic">
           Page not found.
         </div>
-
-        <MeditationTimerModal
-          isOpen={true}
-          onClose={() => {
-            setShowMeditationModal(false);
-          }}
-          defaultMinutes={15}
-          posts={posts}
-        />
-
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <h1 className="text-2xl mb-4">Randomized Image Example</h1>
-          <RandomizedImage
-            imageSrc="/logo-lotus4.png"
-            params={{
-              bShift: -19,
-              backgroundColor: "#d8e8e5",
-              gShift: -11,
-              offsetX: 6.208200019107846,
-              offsetY: -7.717280578508823,
-              rShift: 32,
-              rotationAngle: -6.935702624417267,
-              scale: 1.230609125506053,
-            }}
-            width={800}
-            imgProps={{ className: "rounded-lg shadow-md" }}
-          />
-        </div>
       </>
     );
   }
@@ -238,7 +206,7 @@ export default function PageSlugView({ params }) {
           </div>
         </div>
 
-        <div className="w-4/5">
+        <div className="w-full">
           <PageInfoEditor pid={page?.id} canEdit={isOwner} editOn={editOn} />
         </div>
 
@@ -313,41 +281,76 @@ export default function PageSlugView({ params }) {
           <></>
         )}
         {isOwner && (
-          <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
-            {/* Toggle edit mode */}
+          <>
+            {/* Mobile view of buttons */}
+            <div className="flex md:hidden items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+              {/* Toggle edit mode */}
 
-            {editOn ? (
-              <button
-                onClick={() => setEditOn(!editOn)}
-                className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-              >
-                <div className="text-white">Edit: on</div>
-              </button>
-            ) : (
-              <button
-                onClick={() => setEditOn(!editOn)}
-                className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
-              >
-                <div>Edit: off</div>
-              </button>
-            )}
+              {editOn ? (
+                <button
+                  onClick={() => setEditOn(!editOn)}
+                  className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+                >
+                  <div className="text-white">Edit: on</div>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setEditOn(!editOn)}
+                  className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+                >
+                  <div>Edit: off</div>
+                </button>
+              )}
 
-            {/* User Info + Logout */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]">
-                <UserIcon className="w-5 h-5" />
-                <span className="text-sm">{currentUser.email}</span>
+              {/* User Info + Logout */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
+                  title="Log Out"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
               </div>
-
-              <button
-                onClick={handleLogout}
-                className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
-                title="Log Out"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
             </div>
-          </div>
+
+            {/* Desktop view of buttons */}
+            <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+              {/* Toggle edit mode */}
+
+              {editOn ? (
+                <button
+                  onClick={() => setEditOn(!editOn)}
+                  className="flex  text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#0e4f19] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+                >
+                  <div className="text-white">Edit: on</div>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setEditOn(!editOn)}
+                  className="flex text-sm items-center gap-2 px-4 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text font-medium hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]" // same height across all
+                >
+                  <div>Edit: off</div>
+                </button>
+              )}
+
+              {/* User Info + Logout */}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text h-[44px]">
+                  <UserIcon className="w-5 h-5" />
+                  <span className="text-sm">{currentUser.email}</span>
+                </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center justify-center px-6 py-2 rounded-xl bg-[#f7f3ed] shadow-md text-neumorphic-text hover:shadow-neumorphic-soft active:shadow-neumorphic-pressed h-[44px]"
+                  title="Log Out"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </>
         )}
         {/* NEW: Meditation timer modal. It will close when the modal calls onClose (e.g. X) */}
         <MeditationTimerModal
