@@ -484,7 +484,7 @@ export default function UserDashboard({ params }) {
           </div>
         </>
       ) : (
-        <div className="hidden md:flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
+        <div className=" flex items-center gap-4 mt-4 fixed bottom-6 right-8 z-[100]">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push("/login")}
