@@ -14,7 +14,7 @@ export default function LandingPage() {
     if (!loading && user && user.username) {
       router.push(`/${user.username}`);
     }
-    router.push("guide-mike");
+    router.push("temp-landing");
   }, [user, loading, router]);
 
   // While checking auth status, show a loading state
