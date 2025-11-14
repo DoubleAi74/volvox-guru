@@ -62,7 +62,7 @@ export default function Page() {
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
             <div
               key={num}
-              className="w-full aspect-[4/3] bg-gray-300 rounded-xl overflow-hidden shadow cursor-pointer hover:scale-105 transition-transform"
+              className="w-full aspect-[4/3] bg-gray-300 rounded-md overflow-hidden shadow cursor-pointer hover:scale-105 transition-transform"
               onClick={() => document.getElementById(`img-${num}`).showModal()}
             >
               <img
@@ -84,7 +84,7 @@ export default function Page() {
             <img
               src={`temp-images/Image ${num}.jpg`}
               alt={`Image ${num}`}
-              className="w-full h-auto rounded-xl"
+              className="w-full h-auto rounded-t-xl"
             />
             <form method="dialog">
               <button className="w-full py-2 bg-gray-800 text-white rounded-b-xl">
