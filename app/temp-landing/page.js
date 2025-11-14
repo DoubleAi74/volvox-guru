@@ -44,13 +44,13 @@ export default function Page() {
             <a
               href="https://wa.me/6281568458973"
               target="_blank"
-              className="flex justify-center items-center w-1/6 bg-[#187015] text-white px-4 py-2 rounded-lg hover:bg-[#47af27c2] transition shadow"
+              className="flex justify-center items-center  bg-[#187015] text-white px-4 py-2 rounded-lg hover:bg-[#47af27c2] transition shadow"
             >
               Add my WhatsApp
             </a>
             <a
               href="#destinations"
-              className="flex justify-center items-center w-1/6 bg-[#0e3357] text-white px-4 py-2 rounded-lg hover:bg-[#317891] transition shadow"
+              className="flex justify-center items-center  bg-[#0e3357] text-white px-4 py-2 rounded-lg hover:bg-[#317891] transition shadow"
             >
               Destinations
             </a>
