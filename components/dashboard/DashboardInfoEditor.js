@@ -103,7 +103,7 @@ export default function DashboardInfoEditor({
 
   // Render
   return (
-    <section className="mb-6 mt-[-15px] ml-2">
+    <section className="mb-0 mt-[-15px] ml-2">
       {loading ? (
         <div className="text-sm text-muted">Loading…</div>
       ) : canEdit ? (

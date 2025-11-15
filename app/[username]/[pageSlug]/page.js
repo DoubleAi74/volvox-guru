@@ -16,8 +16,6 @@ import {
 import PostCard from "@/components/page/PostCard";
 import CreatePostModal from "@/components/page/CreatePostModal";
 import EditPostModal from "@/components/page/EditPostModal";
-// <-- ADDED: Meditation timer modal (adjust path if your project stores it elsewhere)
-import MeditationTimerModal from "@/components/MeditationTimerModal";
 
 import PageInfoEditor from "@/components/page/PageInfoEditor";
 
@@ -273,7 +271,6 @@ export default function PageSlugView({ params }) {
                 isOpen={showCreateModal}
                 onClose={() => setShowCreateModal(false)}
                 onSubmit={handleCreatePost}
-                lotusThumb={pageSlug === "meditations"}
               />
             </>
           ))
@@ -353,15 +350,6 @@ export default function PageSlugView({ params }) {
           </>
         )}
         {/* NEW: Meditation timer modal. It will close when the modal calls onClose (e.g. X) */}
-        <MeditationTimerModal
-          isOpen={showMeditationModal}
-          onClose={() => {
-            setShowMeditationModal(false);
-            refreshPosts(page.id);
-          }}
-          defaultMinutes={15}
-          posts={posts}
-        />
       </div>
     </div>
   );

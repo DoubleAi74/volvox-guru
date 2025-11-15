@@ -46,8 +46,8 @@ export default function UserDashboard({ params }) {
     }
   };
 
-  const header1WrapperRef = useRef(null);
-  const header2WrapperRef = useRef(null);
+  // const header1WrapperRef = useRef(null);
+  // const header2WrapperRef = useRef(null);
 
   const isOwner =
     currentUser && profileUser && currentUser.uid === profileUser.uid;
@@ -70,66 +70,6 @@ export default function UserDashboard({ params }) {
       console.error("Failed to log out:", error);
     }
   };
-
-  // useEffect(() => {
-  //   const headerEl = headerRef.current;
-  //   const sentinelEl = sentinelRef.current;
-  //   if (!headerEl || !sentinelEl) return;
-
-  //   // Performance hint
-  //   headerEl.style.willChange = "transform";
-
-  //   let ticking = false;
-
-  //   function updateHeaderPosition() {
-  //     // header height
-  //     const headerHeight = headerEl.offsetHeight;
-
-  //     // sentinel offset from document top
-  //     const sentinelTop =
-  //       sentinelEl.getBoundingClientRect().top + window.scrollY;
-  //     const scrollY = window.scrollY;
-
-  //     const startScroll = sentinelTop - headerHeight;
-  //     const endScroll = sentinelTop;
-
-  //     let transformValue;
-  //     if (scrollY <= startScroll) {
-  //       transformValue = 0;
-  //     } else if (scrollY >= endScroll) {
-  //       transformValue = -headerHeight;
-  //     } else {
-  //       const progress = (scrollY - startScroll) / (endScroll - startScroll);
-  //       transformValue = -progress * headerHeight;
-  //     }
-
-  //     headerEl.style.transform = `translateY(${transformValue}px)`;
-  //     ticking = false;
-  //   }
-
-  //   function onScroll() {
-  //     if (!ticking) {
-  //       window.requestAnimationFrame(updateHeaderPosition);
-  //       ticking = true;
-  //     }
-  //   }
-
-  //   // initial position
-  //   updateHeaderPosition();
-
-  //   document.addEventListener("scroll", onScroll, { passive: true });
-  //   window.addEventListener("resize", updateHeaderPosition, { passive: true });
-
-  //   return () => {
-  //     document.removeEventListener("scroll", onScroll);
-  //     window.removeEventListener("resize", updateHeaderPosition);
-  //     // reset styles
-  //     headerEl.style.transform = "";
-  //     headerEl.style.willChange = "";
-  //   };
-  // }, [
-  //   /* run when main layout elements or profileUser change: */ profileUser?.uid,
-  // ]);
 
   // This single useEffect now handles the entire loading process.
   useEffect(() => {
@@ -218,62 +158,62 @@ export default function UserDashboard({ params }) {
     }
   };
 
-  const updateHeaderPosition = useCallback(() => {
-    const header1Wrapper = header1WrapperRef.current;
-    const header2Wrapper = header2WrapperRef.current;
-    // Guard clause: if refs aren't attached yet, do nothing.
-    if (!header1Wrapper || !header2Wrapper) return;
+  // const updateHeaderPosition = useCallback(() => {
+  //   const header1Wrapper = header1WrapperRef.current;
+  //   const header2Wrapper = header2WrapperRef.current;
+  //   // Guard clause: if refs aren't attached yet, do nothing.
+  //   if (!header1Wrapper || !header2Wrapper) return;
 
-    const header1Height = header1Wrapper.offsetHeight;
-    const header2OffsetTop = header2Wrapper.offsetTop;
-    const scrollY = window.scrollY;
+  //   const header1Height = header1Wrapper.offsetHeight;
+  //   const header2OffsetTop = header2Wrapper.offsetTop;
+  //   const scrollY = window.scrollY;
 
-    const startScroll = header2OffsetTop - header1Height;
-    const endScroll = header2OffsetTop;
+  //   const startScroll = header2OffsetTop - header1Height;
+  //   const endScroll = header2OffsetTop;
 
-    let transformValue;
+  //   let transformValue;
 
-    if (scrollY <= startScroll) {
-      transformValue = 0;
-    } else if (scrollY >= endScroll) {
-      transformValue = -header1Height;
-    } else {
-      const progress = (scrollY - startScroll) / (endScroll - startScroll);
-      transformValue = -progress * header1Height;
-    }
+  //   if (scrollY <= startScroll) {
+  //     transformValue = 0;
+  //   } else if (scrollY >= endScroll) {
+  //     transformValue = -header1Height;
+  //   } else {
+  //     const progress = (scrollY - startScroll) / (endScroll - startScroll);
+  //     transformValue = -progress * header1Height;
+  //   }
 
-    header1Wrapper.style.transform = `translateY(${transformValue}px)`;
-  }, []);
+  //   header1Wrapper.style.transform = `translateY(${transformValue}px)`;
+  // }, []);
 
-  useEffect(() => {
-    // We can't run this until the profileUser is loaded and the refs are attached.
-    if (!profileUser) return;
+  // useEffect(() => {
+  //   // We can't run this until the profileUser is loaded and the refs are attached.
+  //   if (!profileUser) return;
 
-    let ticking = false;
+  //   let ticking = false;
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          updateHeaderPosition();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+  //   const onScroll = () => {
+  //     if (!ticking) {
+  //       window.requestAnimationFrame(() => {
+  //         updateHeaderPosition();
+  //         ticking = false;
+  //       });
+  //       ticking = true;
+  //     }
+  //   };
 
-    // Run once on load to set the initial position correctly.
-    updateHeaderPosition();
+  //   // Run once on load to set the initial position correctly.
+  //   updateHeaderPosition();
 
-    document.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", updateHeaderPosition, { passive: true });
+  //   document.addEventListener("scroll", onScroll, { passive: true });
+  //   window.addEventListener("resize", updateHeaderPosition, { passive: true });
 
-    return () => {
-      document.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", updateHeaderPosition);
-    };
-    // CHANGE 3: The effect now depends on the memoized function.
-    // It will only re-run if updateHeaderPosition itself changes (which it won't).
-  }, [profileUser, updateHeaderPosition]);
+  //   return () => {
+  //     document.removeEventListener("scroll", onScroll);
+  //     window.removeEventListener("resize", updateHeaderPosition);
+  //   };
+  //   // CHANGE 3: The effect now depends on the memoized function.
+  //   // It will only re-run if updateHeaderPosition itself changes (which it won't).
+  // }, [profileUser, updateHeaderPosition]);
 
   // This render logic now works correctly.
   if (loading) {
@@ -296,7 +236,7 @@ export default function UserDashboard({ params }) {
       <>
         <div className="p-6 min-h-[80px]"></div>
         <div
-          ref={header1WrapperRef}
+          // ref={header1WrapperRef}
           className="fixed top-0 left-0 right-0 z-20 pt-2 px-0"
         >
           <DashHeader
@@ -320,7 +260,7 @@ export default function UserDashboard({ params }) {
   return (
     <>
       <div
-        ref={header1WrapperRef}
+        // ref={header1WrapperRef}
         className="fixed top-0 left-0 right-0 z-20 pt-2 px-0"
       >
         <DashHeader
@@ -355,17 +295,17 @@ export default function UserDashboard({ params }) {
 
       {/* Header 2 Wrapper - STICKY */}
       <div
-        ref={header2WrapperRef}
-        className="sticky top-0 left-0 right-0 z-10 pt-2 px-0 "
+        // ref={header2WrapperRef}
+        className="sticky top-[-2px] left-0 right-0 z-10 pt-2 px-0 "
       >
         <DashHeader
-          title={"Services offered"}
+          title={""}
           defaultHex="#166534" // Different color to see the change
           alpha={0.75}
           uid={profileUser?.uid}
           editModeOn={false}
           hexColor={headerColor}
-          heightPx={70}
+          heightPx={20}
         />
       </div>
 

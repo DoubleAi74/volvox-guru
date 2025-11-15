@@ -93,8 +93,20 @@ export default function Page() {
             </form>
           </dialog>
         ))}
+        <div className="text-xl font-semibold text-white pl-7">
+          <div id="destinations" className="text-sm mt-6">
+            Hi my name's Mike 👋, and I'll be your guy on the inside. <br />
+            I'll help you cut through the information, so you can smoothly get
+            to all the places which best suit your personal interests.
+            <br />
+            <div className="mt-3">
+              Just send me a message on WhatsApp, or an email
+              (mybalioption@gmail.com), and we'll discuss your needs.
+            </div>
+          </div>
+        </div>
 
-        <div id="destinations" className="text-white  pl-7 ">
+        <div className="text-white  pl-7 ">
           <h1 className="font-extrabold text-2xl mb-3 mt-7">Destinations</h1>
 
           <ul className="list-none p-0 space-y-2">

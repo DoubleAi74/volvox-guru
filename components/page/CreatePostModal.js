@@ -12,9 +12,6 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import { uploadFile } from "@/lib/data";
-import RandomizedImage, {
-  generateRandomParams,
-} from "@/components/RandomizedImage";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -34,12 +31,7 @@ const initialFormData = {
   content: "",
 };
 
-export default function CreatePostModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  lotusThumb,
-}) {
+export default function CreatePostModal({ isOpen, onClose, onSubmit }) {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState(initialFormData);
@@ -69,10 +61,6 @@ export default function CreatePostModal({
     let postData = { ...formData };
 
     // Sets the random thumbnail specification (Need to test)
-    if (lotusThumb && !formData.thumbnail) {
-      console.log("setting random");
-      postData = { ...postData, thumbnail: generateRandomParams() };
-    }
 
     setFormData(postData);
 
