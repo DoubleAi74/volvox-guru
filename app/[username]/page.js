@@ -47,7 +47,7 @@ export default function UserDashboard({ params }) {
   };
 
   // const header1WrapperRef = useRef(null);
-  // const header2WrapperRef = useRef(null);
+  // const header2WrapperRef = useRef(null)
 
   const isOwner =
     currentUser && profileUser && currentUser.uid === profileUser.uid;
